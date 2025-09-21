@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+static_root/
+.env
+.env.*
+
+# Django Migrations (optional, only if you auto-gen them per-env)
+# ** BUT: in real projects, migrations SHOULD be in repo!
+# */migrations/
+# !*/migrations/__init__.py
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
+
+# mypy / pytest / coverage
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+coverage.xml
+nosetests.xml
+pytestdebug.log
+
+# Virtualenv
+venv/
+env/
+ENV/
+.venv/
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+*.pid
+*.seed
+*.bak
+*.backup
+docker-compose.override.yml
+
+# Node / front-end (if using React/Vue etc.)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Compiled translations
+*.mo
