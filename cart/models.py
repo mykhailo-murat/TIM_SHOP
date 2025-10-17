@@ -41,7 +41,7 @@ class Cart(models.Model):
     def update_item_quantity(self, item_id, quantity):
         try:
             item = self.items.get(id=item_id)
-            if  quantity > 0:
+            if quantity > 0:
                 item.quantity = quantity
             else:
                 item.delete()
