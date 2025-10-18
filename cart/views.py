@@ -69,7 +69,7 @@ class AddToCartView(CartMixin, View):
         request.session['cart_id'] = cart.id
         request.session.modified = True
 
-        if request.headers.get('Hx-Request'):
+        if request.headers.get('HX-Request'):
             return redirect('cart:cart_modal')  # no redirect just open
         else:
             return JsonResponse({
@@ -153,7 +153,7 @@ class CartClearView(CartMixin, View):
         request.session['cart_id'] = cart.id
         request.session.modified = True
 
-        if request.headers.get('Hx-Request'):
+        if request.headers.get('HX-Request'):
             return TemplateResponse(request, 'cart/cart_modal.html', {
                 'cart': cart
             })
@@ -188,3 +188,5 @@ class CartModalView(CartMixin, View):
         }
 
         return TemplateResponse(request, 'cart/cart_modal.html', context=context)
+
+
