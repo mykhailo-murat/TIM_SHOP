@@ -64,7 +64,7 @@ class AddToCartView(CartMixin, View):
                     'error': f'Product size {product_size.stock} exceeds stock',
                 }, status=400)
 
-        cart_item = cart.add_item(product, product_size, quantity)
+        cart_item = cart.add_product(product, product_size, quantity)
 
         request.session['cart_id'] = cart.id
         request.session.modified = True
