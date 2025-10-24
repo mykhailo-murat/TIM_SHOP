@@ -148,14 +148,14 @@
                                     onclick="document.getElementById('payment_provider').value='stripe'">
                                 Pay with Stripe
                             </button>
-                            <button type="submit"
-                                    form="order-form"
-                                    name="create_order"
-                                    value="create_order"
-                                    class="w-full bg-black text-white py-4 px-6 font-bold hover:bg-gray-800 transition-colors payment-button"
-                                    onclick="document.getElementById('payment_provider').value='heleket'">
-                                Pay with Heleket
-                            </button>
+{#                            <button type="submit"#}
+{#                                    form="order-form"#}
+{#                                    name="create_order"#}
+{#                                    value="create_order"#}
+{#                                    class="w-full bg-black text-white py-4 px-6 font-bold hover:bg-gray-800 transition-colors payment-button"#}
+{#                                    onclick="document.getElementById('payment_provider').value='heleket'">#}
+{#                                Pay with Heleket#}
+{#                            </button>#}
                             <input type="hidden" name="payment_provider" id="payment_provider">
                         </div>
                     </form>
@@ -182,7 +182,7 @@
                                 <p class="text-xs text-gray-600">{{ item.product_size.size.name }}</p>
                             </div>
                             <div class="text-right">
-                                <span class="font-medium">€{{ item.product.price|floatformat:2 }}</span>
+                                <span class="font-medium">${{ item.product.price|floatformat:2 }}</span>
                             </div>
                         </div>
                     {% endfor %}
@@ -192,7 +192,7 @@
                 <div id="order-summary" class="space-y-3 border-t pt-4">
                     <div class="flex justify-between text-sm">
                         <span>Subtotal • {{ cart.total_items }} item{{ cart.total_items|pluralize }}</span>
-                        <span>€{{ total_price|floatformat:2 }}</span>
+                        <span>${{ total_price|floatformat:2 }}</span>
                     </div>
 
                     <div class="flex justify-between text-sm">
@@ -203,8 +203,8 @@
                     <div class="flex justify-between text-lg font-medium pt-3 border-t">
                         <span>Total</span>
                         <div class="text-right">
-                            <span class="text-sm text-gray-600">EUR </span>
-                            <span>€{{ total_price|floatformat:2 }}</span>
+                            <span class="text-sm text-gray-600">USD </span>
+                            <span>${{ total_price|floatformat:2 }}</span>
                         </div>
                     </div>
                 </div>

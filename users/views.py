@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -25,7 +25,7 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request=request, data=request.POST)
+        form = CustomUserLoginForm(request=request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')

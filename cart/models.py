@@ -62,10 +62,10 @@ class CartItem(models.Model):
 
     class Meta:
         # TODO: what is it ?
-        unique_together = (('cart', 'product'),)
+        unique_together = ('cart', 'product', 'product_size')
 
     def __str__(self):
-        return f"{self.product.name}, {self.quantity} x {self.quantity}"
+        return f"{self.product.name} - {self.product_size.size.name} x {self.quantity}"
 
     @property
     def total_price(self):

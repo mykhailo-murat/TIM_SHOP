@@ -13,7 +13,9 @@ from main.models import ProductSize
 from django.shortcuts import get_object_or_404, redirect, render
 from decimal import Decimal
 from payment.views import create_stripe_checkout_session
+import logging
 
+logger = logging.getLogger(__name__)
 
 @method_decorator(login_required(login_url='users/login'), name='dispatch')
 class CheckoutView(CartMixin, View):
@@ -89,7 +91,7 @@ class CheckoutView(CartMixin, View):
                     product=item.product,
                     size=item.product_size,
                     quantity=item.quantity,
-                    price=item.price or Decimal('0.00'),
+                    price=item.product.price or Decimal('0.00'),
                 )
 
             try:

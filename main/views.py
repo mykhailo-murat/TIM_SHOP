@@ -1,4 +1,4 @@
-from django.shortcuts import get_list_or_404
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, DetailView
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
@@ -30,7 +30,7 @@ class CatalogView(TemplateView):
         'color': lambda queryset, value: queryset.filter(color__iexact=value),
         'min_price': lambda queryset, value: queryset.filter(price__gte=value),
         'max_price': lambda queryset, value: queryset.filter(price__lte=value),
-        'size': lambda queryset, value: queryset.filter(product_sizes__size_name=value),
+        'size': lambda queryset, value: queryset.filter(product_sizes__size__name=value),
     }
 
     def get_context_data(self, **kwargs):
@@ -41,7 +41,7 @@ class CatalogView(TemplateView):
         current_category = None
 
         if category_slug:
-            current_category = get_list_or_404(Category, slug=category_slug)
+            current_category = get_object_or_404(Category, slug=category_slug)
             products = products.filter(category=current_category)
 
         query = self.request.GET.get('q')
@@ -53,11 +53,12 @@ class CatalogView(TemplateView):
         filter_params = {}
         for param, filter_func in self.FILTER_MAPPING.items():
             value = self.request.GET.get(param)
-            if value is not None:
+            if value:
                 products = filter_func(products, value)
                 filter_params[param] = value
             else:
-                filter_params[param] = None
+                filter_params[param] = ''
+
         filter_params['q'] = query or ''
 
         context.update({
@@ -69,10 +70,8 @@ class CatalogView(TemplateView):
             'search_query': query or ''
         })
 
-        if self.request.GET.get('show_search') == 'true':
-            context['show_search'] = True
-        elif self.request.GET.get('show_search') == 'true':
-            context['show_search'] = True
+        context['show_search'] = self.request.GET.get('show_search') == 'true'
+        context['reset_search'] = self.request.GET.get('reset_search') == 'true'
 
         return context
 
@@ -83,8 +82,7 @@ class CatalogView(TemplateView):
                 return TemplateResponse(request, 'main/search_input.html', context)
             elif context.get('reset_search'):
                 return TemplateResponse(request, 'main/search_button.html', {})
-            template_name = 'main/filter_modal.html' if request.GET.get(
-                'show_filters') == 'true' else 'main/catalog.html'
+            template_name = 'main/filter_modal.html' if request.GET.get('show_filters') == 'true' else 'main/catalog.html'
             return TemplateResponse(request, template_name, context)
         return TemplateResponse(request, self.template_name, context)
 
@@ -98,7 +96,7 @@ class ProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = self.get_object()
-        context['category'] = Category.objects.all()
+        context['categories'] = Category.objects.all()
         context['related_products'] = Product.objects.filter(
             category=product.category
         ).exclude(id=product.id)[:3]

@@ -7,13 +7,13 @@
         <p class="text-lg text-gray-600 mb-8">
             Select a category to browse our collection
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+        <div class="flex gap-3 mx-auto">
             {% for category in categories %}
             <a href="{% url 'main:catalog' category.slug %}"
                hx-get="{% url 'main:catalog' category.slug %}"
                hx-target="#main-content"
                hx-push-url="true"
-               class="block p-8 border border-gray-200 hover:border-gray-300 transition-colors">
+               class="block p-2 border border-gray-200 hover:border-gray-300 transition-colors">
                 <h3 class="text-xl font-bold">{{ category.name|upper }}</h3>
             </a>
             {% endfor %}

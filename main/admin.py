@@ -28,7 +28,6 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
-
 class SizeAdmin(admin.ModelAdmin):
     list_display = ['name']
 
