@@ -13,6 +13,7 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['current_category'] = None
+        context['products'] = Product.objects.all()
         return context
 
     # get tmpls method

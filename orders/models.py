@@ -12,7 +12,7 @@ class Order(models.Model):
         ('Cancelled', 'Cancelled'),
     )
     PAYMENT_PROVIDER_CHOICES = (
-        ('Stripe', 'Stripe'),
+        ('stripe', 'stripe'),
     )
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
@@ -30,7 +30,7 @@ class Order(models.Model):
     special_instructions = models.TextField(blank=True, null=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    payment_provider = models.CharField(max_length=20, choices=PAYMENT_PROVIDER_CHOICES, default='Stripe')
+    payment_provider = models.CharField(max_length=20, choices=PAYMENT_PROVIDER_CHOICES, default='stripe')
     stripe_payment_intent_id = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

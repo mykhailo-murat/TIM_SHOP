@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('special_instructions', models.TextField(blank=True, null=True)),
                 ('total_price', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
                 ('status', models.CharField(choices=[('Pending', 'Pending'), ('Processing', 'Processing'), ('Shipped', 'Shipped'), ('Delivered', 'Delivered'), ('Cancelled', 'Cancelled')], default='Pending', max_length=20)),
-                ('payment_provider', models.CharField(choices=[('Stripe', 'Stripe')], default='Stripe', max_length=20)),
+                ('payment_provider', models.CharField(choices=[('stripe', 'stripe')], default='stripe', max_length=20)),
                 ('stripe_payment_intent_id', models.CharField(blank=True, max_length=255, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),

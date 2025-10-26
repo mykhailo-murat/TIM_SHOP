@@ -9,6 +9,10 @@ from .forms import CustomUserCreationForm, CustomUserLoginForm, CustomUserUpdate
 from .models import CustomUser
 from django.contrib import messages
 from main.models import Product
+from orders.models import Order
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def register(request):
@@ -47,9 +51,10 @@ def profile_view(request):
     else:
         form = CustomUserUpdateForm(instance=request.user)
     recommended_products = Product.objects.all().order_by('id')[:3]
-
+    latest_order = Order.objects.filter(user=request.user).order_by('-created_at').first()
+    logger.debug(f"latest_order: {latest_order}")
     return TemplateResponse(request, 'users/profile.html',
-                            {'form': form, 'user': request.user, 'recommended_products': recommended_products})
+                            {'form': form, 'user': request.user, 'recommended_products': recommended_products, 'latest_order': latest_order})
 
 
 @login_required(login_url='/users/login')
@@ -93,3 +98,15 @@ def logout_view(request):
     if request.headers.get("HX-Request"):
         return HttpResponse(headers={'HX-Redirect': reverse('main:index')})
     return redirect('main:index')
+
+
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return TemplateResponse(request, 'users/partials/order_history.html', {'orders': orders})
+
+
+@login_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    return TemplateResponse(request, 'users/partials/order_detail.html', {'order': order})

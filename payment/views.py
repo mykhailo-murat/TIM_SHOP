@@ -13,6 +13,9 @@ from decimal import Decimal
 import json
 import hashlib
 import base64
+import logging
+
+logger = logging.getLogger(__name__)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 stripe_endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
@@ -26,7 +29,7 @@ def create_stripe_checkout_session(order, request):
             'price_data': {
                 'currency': 'usd',
                 'product_data': {
-                    'name': f'{item.product.name} - {item.product_size.name}',
+                    'name': f'{item.product.name} - {item.product_size.size.name}',
                 },
                 'unit_amount': int(item.product.price * 100),
             },
@@ -39,7 +42,7 @@ def create_stripe_checkout_session(order, request):
             line_items=line_items,
             mode='payment',
             success_url=request.build_absolute_uri('/payment/stripe/success') + '?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url=request.build_absolute_uri('/payment/stripe/cancel') + f'order_id={order.order_id}',
+            cancel_url=request.build_absolute_uri('/payment/stripe/cancel') + f'order_id={order.id}',
             metadata={
                 'order_id': order.id,
             }
@@ -61,21 +64,32 @@ def stripe_webhook(request):
 
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, stripe_endpoint_secret)
+        logger.info(f"Stripe event received: {event['type']}")
     except ValueError as e:
+        logger.error(f"Invalid payload: {e}")
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError as e:
+        logger.error(f"Invalid signature: {e}")
         return HttpResponse(status=400)
 
-    if event.type == 'checkout.session.completed':
+    if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
-        order_id = session['metadata'].get('order_id')
+        metadata = session.get('metadata', {})
+        order_id = metadata.get('order_id')
+        logger.info(f"Session completed for order ID: {order_id}")
+
         try:
-            order = Order.objects.get(id=order_id)
+            order = Order.objects.get(id=int(order_id))
+            logger.info(f"Order {order.id} found. Current status: {order.status}")
             order.status = 'Processing'
             order.stripe_payment_intent_id = session.get('payment_intent')
             order.save()
+            order.refresh_from_db()
+            logger.info(f"Order {order.id} updated. New status: {order.status}")
         except Order.DoesNotExist:
+            logger.error(f"Order with ID {order_id} does not exist.")
             return HttpResponse(status=400)
+
     return HttpResponse(status=200)
 
 
@@ -85,7 +99,7 @@ def stripe_success(request):
         try:
             session = stripe.checkout.Session.retrieve(session_id)
             order_id = session.metadata.get('order_id')
-            order = Order.objects.get(Order, id=order_id)
+            order = get_object_or_404(Order, id=order_id)
 
             cart = CartMixin().get_cart(request)
             cart.clear()

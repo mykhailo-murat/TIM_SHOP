@@ -1,22 +1,53 @@
 <!-- Home content for HTMX requests -->
 <main class="mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="text-center py-20">
-        <h2 class="text-4xl font-bold tracking-tight text-gray-900 mb-4">
-            TIM SHOP
-        </h2>
-        <p class="text-lg text-gray-600 mb-8">
-            Select a category to browse our collection
-        </p>
-        <div class="flex gap-3 mx-auto">
-            {% for category in categories %}
-            <a href="{% url 'main:catalog' category.slug %}"
-               hx-get="{% url 'main:catalog' category.slug %}"
-               hx-target="#main-content"
-               hx-push-url="true"
-               class="block p-2 border border-gray-200 hover:border-gray-300 transition-colors">
-                <h3 class="text-xl font-bold">{{ category.name|upper }}</h3>
-            </a>
-            {% endfor %}
-        </div>
+
+        {% if products %}
+            <h2 class="text-4xl font-bold tracking-tight text-gray-900 mb-4">All Products</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
+                {% for product in products %}
+                    <div class="product-card group cursor-pointer"
+                         hx-get="{% url 'main:product_detail' product.slug %}"
+                         hx-target="#main-content"
+                         hx-push-url="true">
+                        <div class="aspect-square overflow-hidden bg-gray-100 mb-4">
+                            {% if product.main_image %}
+                                <img src="{{ product.main_image.url }}"
+                                     alt="{{ product.name }}"
+                                     class="product-image w-full h-full object-cover">
+                            {% else %}
+                                <div class="product-image w-full h-full bg-gray-200 flex items-center justify-center">
+                                    <span class="text-gray-400 text-sm">No Image</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-sm font-medium text-gray-900 mb-1 uppercase">{{ product.name }}</h3>
+                            <p class="text-sm text-gray-600 mb-1 uppercase">{{ product.color }}</p>
+                            <p class="text-sm font-medium">${{ product.price }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-20">
+                <h3 class="text-2xl font-bold text-gray-900 mb-4 uppercase">No products found</h3>
+                <p class="text-gray-600 mb-8">
+                    {% if current_category %}
+                        No products available in this category yet.
+                    {% else %}
+                        No products available at the moment.
+                    {% endif %}
+                </p>
+                <a href="{% url 'main:index' %}"
+                   hx-get="{% url 'main:index' %}"
+                   hx-target="#main-content"
+                   hx-push-url="true"
+                   class="bg-black text-white px-6 py-3 text-sm font-medium uppercase hover:bg-gray-800 transition-colors">
+                    Back to Home
+                </a>
+            </div>
+        {% endif %}
+
     </div>
 </main>

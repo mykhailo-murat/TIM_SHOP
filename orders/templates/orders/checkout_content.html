@@ -139,7 +139,7 @@
                         </div>
 
                         <!-- Payment Buttons -->
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid">
                             <button type="submit"
                                     form="order-form"
                                     name="create_order"
@@ -246,7 +246,7 @@
                 return false;
             }
 
-            if (!['stripe', 'heleket'].includes(paymentProviderInput.value)) {
+            if (!['stripe'].includes(paymentProviderInput.value)) {
                 e.preventDefault();
                 console.error('Invalid payment provider:', paymentProviderInput.value);
                 alert('Please select a valid payment provider');
