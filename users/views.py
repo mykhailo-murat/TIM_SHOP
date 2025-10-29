@@ -53,11 +53,21 @@ def profile_view(request):
             return redirect('users:profile')
     else:
         form = CustomUserUpdateForm(instance=request.user)
+
     recommended_products = Product.objects.all().order_by('id')[:3]
     latest_order = Order.objects.filter(user=request.user).order_by('-created_at').first()
-    logger.debug(f"latest_order: {latest_order}")
-    return TemplateResponse(request, 'users/profile.html',
-                            {'form': form, 'user': request.user, 'recommended_products': recommended_products, 'latest_order': latest_order})
+
+    context = {
+        'form': form,
+        'user': request.user,
+        'recommended_products': recommended_products,
+        'latest_order': latest_order,
+    }
+
+    if request.headers.get("HX-Request"):
+        return TemplateResponse(request, 'users/profile.html', context)
+
+    return TemplateResponse(request, 'users/profile_full.html', context)
 
 
 @login_required(login_url='/users/login')
