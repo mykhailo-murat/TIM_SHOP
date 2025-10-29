@@ -32,8 +32,11 @@ def login_view(request):
         form = CustomUserLoginForm(request=request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('main:index')
+            if user is not None:
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect('main:index')
+            else:
+                form.add_error(None, "Authentication failed. Please try again.")
     else:
         form = CustomUserLoginForm()
     return render(request, 'users/login.html', {'form': form})

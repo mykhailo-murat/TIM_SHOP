@@ -60,11 +60,11 @@ class CustomUserLoginForm(AuthenticationForm):
     )
 
     def clean(self):
-        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
-        if email and password:
-            self.user_cache = authenticate(email=email, password=password)
+        if username and password:
+            self.user_cache = authenticate(username=username, password=password)
             if self.user_cache is None:
                 raise forms.ValidationError('Invalid Credentials')
             elif not self.user_cache.is_active:
