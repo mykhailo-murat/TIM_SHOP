@@ -36,7 +36,6 @@ CSRF_TRUSTED_ORIGINS = [
     'https://www.timshop.murat.digital',
 ]
 
-
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
@@ -57,6 +56,7 @@ INSTALLED_APPS = [
     'users',
     'orders',
     'payment',
+    'wishlist',
 ]
 
 MIDDLEWARE = [
@@ -86,6 +86,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'cart.context_processors.cart_processor',
+                'wishlist.context_processors.wishlist_ids',
             ],
         },
     },

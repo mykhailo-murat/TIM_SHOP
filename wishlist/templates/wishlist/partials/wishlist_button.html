@@ -1,0 +1,19 @@
+<form
+        hx-post="{% url 'wishlist:toggle_wishlist' product.id %}"
+        hx-target="#wishlist-btn-{{ product.id }}"
+        hx-swap="outerHTML"
+        class="inline-block w-full"
+        method="POST"
+>
+    {% csrf_token %}
+    <button
+            type="submit"
+            class="w-full border border-gray-300 py-3 px-6 text-sm font-medium hover:border-gray-900 transition-colors"
+    >
+        {% if product.id in wishlist_ids %}
+            ❤️ In Wishlist
+        {% else %}
+            ♡ Add to Wishlist
+        {% endif %}
+    </button>
+</form>

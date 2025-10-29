@@ -1,0 +1,31 @@
+{% load static %}
+
+<h1 class="text-2xl font-bold mb-6">Your Wishlist</h1>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {% for item in items %}
+        <div class="bg-white p-4 rounded-lg shadow-lg card">
+            <div class="mb-4">
+                {% if item.product.main_image %}
+                    <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}"
+                         class="w-full h-48 object-contain rounded">
+                {% else %}
+                    <img src="{% static 'img/placeholder.jpg' %}" alt="{{ item.product.name }}"
+                         class="w-full h-48 object-cover rounded">
+                {% endif %}
+            </div>
+            <h3 class="text-sm font-semibold text-gray-900">{{ item.product.name }}</h3>
+            <p class="text-sm text-gray-700">€{{ item.product.price }}</p>
+            <a
+                    href="{% url 'main:product_detail' item.product.slug %}"
+                    hx-get="{% url 'main:product_detail' item.product.slug %}"
+                    hx-target="#main-content"
+                    hx-push-url="true"
+                    class="mt-2 inline-block bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 transition-colors duration-200 text-sm tracking-wide"
+            >
+                VIEW
+            </a>
+        </div>
+    {% empty %}
+        <p>No items yet...</p>
+    {% endfor %}
+</div>

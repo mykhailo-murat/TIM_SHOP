@@ -98,9 +98,12 @@
                     ADD TO CART
                 </button>
 
-                <button class="w-full border border-gray-300 py-3 px-6 text-sm font-medium hover:border-gray-900 transition-colors">
-                    ADD TO WISHLIST
-                </button>
+                {#                <button class="w-full border border-gray-300 py-3 px-6 text-sm font-medium hover:border-gray-900 transition-colors">#}
+                {#                    ADD TO WISHLIST#}
+                {#                </button>#}
+                <div id="wishlist-btn-{{ product.id }}">
+                    {% include 'wishlist/partials/wishlist_button.html' %}
+                </div>
             </div>
 
             <!-- Product Details -->
@@ -108,7 +111,6 @@
                 <h3 class="text-sm font-medium text-gray-900 mb-3">DETAILS</h3>
                 <div class="prose prose-sm text-gray-600">
                     <p>{{ product.description|linebreaks }}</p>
-{#                    <p>Created: {{ product.created_at|date:"F d, Y" }}</p>#}
                 </div>
             </div>
 
