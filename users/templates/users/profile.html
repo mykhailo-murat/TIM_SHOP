@@ -186,24 +186,29 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.body.addEventListener('htmx:afterOnLoad', function () {
             const navItems = document.querySelectorAll('.nav-item a');
-            navItems.forEach(item => {
-                item.addEventListener('click', function () {
-                    navItems.forEach(nav => nav.classList.remove('text-gray-900', 'border-l-4', 'border-gray-500', 'pl-2'));
-                    this.classList.add('text-gray-900', 'border-l-4', 'border-gray-500', 'pl-2');
-                });
-            });
+            const currentUrl = window.location.pathname;
 
-            document.body.addEventListener('htmx:afterSwap', function (event) {
-                const target = event.detail.target;
-                if (target.id === 'main-content' || target.id === 'profile-main-content' || target.id === 'account-details-content') {
-                    target.classList.add('animate-section');
-                    setTimeout(() => {
-                        target.classList.remove('animate-section');
-                    }, 500);
+            navItems.forEach(link => {
+                link.classList.remove('text-gray-900', 'border-l-4', 'border-gray-500', 'pl-2');
+
+                const linkUrl = link.getAttribute('href');
+                if (currentUrl === linkUrl) {
+                    link.classList.add('text-gray-900', 'border-l-4', 'border-gray-500', 'pl-2');
                 }
             });
+        });
+
+
+        document.body.addEventListener('htmx:afterSwap', function (event) {
+            const target = event.detail.target;
+            if (target.id === 'main-content' || target.id === 'profile-main-content' || target.id === 'account-details-content') {
+                target.classList.add('animate-section');
+                setTimeout(() => {
+                    target.classList.remove('animate-section');
+                }, 500);
+            }
         });
     </script>
 {% endblock %}

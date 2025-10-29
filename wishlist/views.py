@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from .models import Wishlist
 from main.models import Product
+from django.template.response import TemplateResponse
 
 
 @login_required
@@ -24,4 +25,6 @@ def toggle_wishlist(request, product_id):
 @login_required
 def wishlist_page(request):
     items = Wishlist.objects.filter(user=request.user).select_related('product')
-    return render(request, 'wishlist/wishlist_page.html', {'items': items})
+    if request.headers.get('HX-Request'):
+        return render(request, 'wishlist/wishlist_page.html', {'items': items})
+    return TemplateResponse(request, 'wishlist/wishlist_page_full.html', {'items': items})

@@ -116,7 +116,9 @@ def logout_view(request):
 @login_required
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return TemplateResponse(request, 'users/partials/order_history.html', {'orders': orders})
+    if request.headers.get('HX-Request'):
+        return TemplateResponse(request, 'users/partials/order_history.html', {'orders': orders})
+    return TemplateResponse(request, 'users/order_history_full.html', {'orders': orders})
 
 
 @login_required
