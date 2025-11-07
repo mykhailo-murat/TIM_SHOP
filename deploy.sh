@@ -4,8 +4,8 @@ echo "📦 Pulling latest changes from Git..."
 git pull origin master
 
 echo "🔧 Rebuilding Docker containers..."
-docker compose down
-docker compose up -d --build
+docker compose -f /srv/webapps/infrastructure/docker-compose.yml down
+docker compose -f /srv/webapps/infrastructure/docker-compose.yml up -d --build
 
 echo "📦 Running migrations..."
 docker compose exec web python manage.py migrate
