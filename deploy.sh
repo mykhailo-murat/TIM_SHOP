@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "📦 Pulling latest changes from Git..."
-git pull origin main
+git pull origin master
 
 echo "🔧 Rebuilding Docker containers..."
 docker compose down
